@@ -44,7 +44,7 @@
         state: present
 
     - name: Add Azure inventory source
-      inventory_source:
+      awx.awx.inventory_source:
         name: "azure-source"
         inventory: Azure Inventory
         credential: AzureCred
