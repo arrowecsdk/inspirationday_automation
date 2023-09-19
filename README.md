@@ -64,4 +64,6 @@ export CONTROLLER_HOST=http://<hostname>
 export CONTROLLER_USERNAME=admin
 export CONTROLLER_OAUTH_TOKEN=oKux6ADwqn127BK3Ov4WjfbPjtPG16
 
+ansible-playbook configure_awx.yml
+
 ```
