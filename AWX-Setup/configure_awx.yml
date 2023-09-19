@@ -28,3 +28,11 @@
         organization: Default
         state: absent
 
+    - name: Create project
+      awx.awx.project:
+        name: Project
+        organization: Default
+        state: present
+        scm_type: git
+        scm_url: https://github.com/arrowecsdk/inspirationday_automation.git
+        credential: "GitHub PAT"
