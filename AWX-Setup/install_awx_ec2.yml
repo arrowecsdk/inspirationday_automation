@@ -1,0 +1,12 @@
+---
+- name: AWX install on Ubuntu Linux
+  hosts: tag_project_ansibleawx
+  become: true
+  vars:
+    ansible_user: ubuntu
+    awx_password: Passw0rd!
+    awxoperater_version: "2.4.0"
+
+  roles:
+    - role: jesperberth.deb_k3s
+    - role: jesperberth.awx_k8s_install
