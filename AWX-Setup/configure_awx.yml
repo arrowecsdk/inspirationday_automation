@@ -43,6 +43,17 @@
         organization: Default
         state: present
 
+    - name: Add Azure inventory source
+      inventory_source:
+        name: "azure-source"
+        inventory: Azure Inventory
+        credential: AzureCred
+        overwrite: True
+        update_on_launch: True
+        organization: Default
+        source_vars:
+          private: false
+
     - name: AWS inventory
       awx.awx.inventory:
         name: AWS Inventory
