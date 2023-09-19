@@ -36,3 +36,15 @@
         scm_type: git
         scm_url: git@github.com:arrowecsdk/inspirationday_automation.git
         credential: "GitHub"
+
+    - name: Azure inventory
+      awx.awx.inventory:
+        name: Azure Inventory
+        organization: Default
+        state: present
+
+    - name: AWS inventory
+      awx.awx.inventory:
+        name: AWS Inventory
+        organization: Default
+        state: present
