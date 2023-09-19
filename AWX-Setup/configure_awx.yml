@@ -53,10 +53,9 @@
         update_on_launch: True
         organization: Default
         source_vars:
-          ---
           keyed_groups:
-          - prefix: tag
-            key: tags
+            - prefix: tag
+              key: tags
 
     - name: AWS inventory
       awx.awx.inventory:
