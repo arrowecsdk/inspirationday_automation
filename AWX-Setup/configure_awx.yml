@@ -34,5 +34,5 @@
         organization: Default
         state: present
         scm_type: git
-        scm_url: https://github.com/arrowecsdk/inspirationday_automation.git
+        scm_url: git@github.com:arrowecsdk/inspirationday_automation.git
         credential: "GitHub"
