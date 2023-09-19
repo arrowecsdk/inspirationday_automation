@@ -62,3 +62,17 @@
         name: AWS Inventory
         organization: Default
         state: present
+
+    - name: Add AWS inventory source
+      awx.awx.inventory_source:
+        name: "aws-source"
+        inventory: AWS Inventory
+        source: ec2
+        credential: AWSCred
+        overwrite: True
+        update_on_launch: True
+        organization: Default
+        source_vars:
+          keyed_groups:
+            - prefix: tag
+              key: tags
