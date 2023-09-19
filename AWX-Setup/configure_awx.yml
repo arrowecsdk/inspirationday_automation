@@ -47,6 +47,7 @@
       awx.awx.inventory_source:
         name: "azure-source"
         inventory: Azure Inventory
+        source: azure_rm
         credential: AzureCred
         overwrite: True
         update_on_launch: True
