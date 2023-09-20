@@ -95,6 +95,6 @@
           }
         - {
             name: "Azure Network",
-            playbook: "Azure-Playbook/01_azure_network.yml",
+            playbook: "Azure-Playbook/02_azure_network.yml",
             cred: "AzureCred",
           }
