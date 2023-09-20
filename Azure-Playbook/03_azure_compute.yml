@@ -18,14 +18,14 @@
 
   tasks:
     - name: Create a public ip address for webservers
-      azure_rm_publicipaddress:
+      azure.azcollection.azure_rm_publicipaddress:
         resource_group: "{{ resourcegroup }}"
         name: "public_ip_{{ item }}"
         allocation_method: static
       loop: "{{ servers }}"
 
     - name: Create a network interface for webservers
-      azure_rm_networkinterface:
+      azure.azcollection.azure_rm_networkinterface:
         name: "{{ item }}_nic01"
         resource_group: "{{ resourcegroup }}"
         virtual_network: "{{ virtualnetwork_name }}"
@@ -34,7 +34,7 @@
         ip_configurations:
           - name: "{{ item }}_nic01_ipconfig"
             public_ip_address_name: "public_ip_{{ item }}"
-            primary: True
+            primary: true
       loop: "{{ servers }}"
       async: 1000
       poll: 0
@@ -50,7 +50,7 @@
       with_items: "{{ create_nic.results }}"
 
     - name: Create Webservers
-      azure_rm_virtualmachine:
+      azure.azcollection.azure_rm_virtualmachine:
         resource_group: "{{ resourcegroup }}"
         name: "{{ item }}"
         vm_size: Standard_A1_v2

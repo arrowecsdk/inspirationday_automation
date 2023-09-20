@@ -6,9 +6,9 @@
     location: "northeurope"
 
   tasks:
-  - name: Delete Resource Group and Content
-    azure_rm_resourcegroup:
-      name: "{{ resourcegroup }}"
-      location: "{{ location }}"
-      force_delete_nonempty: yes
-      state: absent
+    - name: Delete Resource Group and Content
+      azure.azcollection.azure_rm_resourcegroup:
+        name: "{{ resourcegroup }}"
+        location: "{{ location }}"
+        force_delete_nonempty: true
+        state: absent

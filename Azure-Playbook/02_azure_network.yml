@@ -15,21 +15,21 @@
 
   tasks:
     - name: Create a virtual network
-      azure_rm_virtualnetwork:
+      azure.azcollection.azure_rm_virtualnetwork:
         resource_group: "{{ resourcegroup }}"
         name: "{{ virtualnetwork_name }}"
         address_prefixes_cidr:
           - "{{ cidr }}"
 
     - name: Create a subnet
-      azure_rm_subnet:
+      azure.azcollection.azure_rm_subnet:
         resource_group: "{{ resourcegroup }}"
         virtual_network_name: "{{ virtualnetwork_name }}"
         name: "{{ webserver_subnet }}"
         address_prefix_cidr: "{{ cidr_public_a }}"
 
     - name: Create an availability set with advanced options
-      azure_rm_availabilityset:
+      azure.azcollection.azure_rm_availabilityset:
         name: "{{ availabilityset }}"
         location: "{{ location }}"
         resource_group: "{{ resourcegroup }}"
@@ -38,10 +38,10 @@
         sku: Aligned
 
     - name: Create Security Group
-      azure_rm_securitygroup:
+      azure.azcollection.azure_rm_securitygroup:
         resource_group: "{{ resourcegroup }}"
         name: "{{ webserver_nsg }}"
-        purge_rules: yes
+        purge_rules: true
         rules:
           - name: "AllowSSH"
             protocol: Tcp

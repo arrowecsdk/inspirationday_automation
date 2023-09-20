@@ -1,5 +1,6 @@
 ---
-- hosts: localhost
+- name: Deploy Tower on AWS
+  hosts: localhost
   connection: local
   vars:
     vpc_name: "Tower-vpc"
@@ -10,7 +11,7 @@
     zone1: "a"
 
   tasks:
-    - name: create key pair using key_material obtained using 'file' lookup plugin
+    - name: Create key pair using key_material obtained using 'file' lookup plugin
       amazon.aws.ec2_key:
         name: tower_keypair
         region: "{{ region }}"
@@ -18,7 +19,7 @@
         tags:
           project: "{{ project_name }}"
 
-    - name: create VPC
+    - name: Create VPC
       amazon.aws.ec2_vpc_net:
         name: "{{ vpc_name }}"
         cidr_block: "{{ cidr }}"
@@ -28,7 +29,7 @@
           project: "{{ project_name }}"
       register: network
 
-    - name: create subnet Servers
+    - name: Create subnet Servers
       amazon.aws.ec2_vpc_subnet:
         region: "{{ region }}"
         state: present
@@ -40,7 +41,7 @@
           Name: "public_az_{{ zone1 }}"
       register: subnetpublica
 
-    - name: vpc internet gateway
+    - name: Vpc internet gateway
       amazon.aws.ec2_vpc_igw:
         region: "{{ region }}"
         vpc_id: "{{ network.vpc.id }}"
@@ -72,7 +73,7 @@
             gateway_id: "{{ igw.gateway_id }}"
 
     - name: Set Security Group for VPC
-      amazon.aws.ec2_group:
+      amazon.aws.ec2_security_group:
         name: default
         description: default VPC security group
         vpc_id: "{{ network.vpc.id }}"
@@ -100,7 +101,7 @@
         region: "{{ region }}"
         instance_type: t3.xlarge
         image_id: ami-04e601abe3e1a910f
-        wait: yes
+        wait: true
         security_group: default
         vpc_subnet_id: "{{ subnetpublica.subnet.id }}"
         network:

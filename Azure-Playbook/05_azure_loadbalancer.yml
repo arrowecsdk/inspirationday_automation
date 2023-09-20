@@ -10,14 +10,14 @@
 
   tasks:
     - name: Create a public ip address for loadbalancer
-      azure_rm_publicipaddress:
+      azure.azcollection.azure_rm_publicipaddress:
         resource_group: "{{ resourcegroup }}"
         name: weblb_pub_ip
         allocation_method: static
         domain_name: "weblb"
 
-    - name: create load balancer
-      azure_rm_loadbalancer:
+    - name: Create load balancer
+      azure.azcollection.azure_rm_loadbalancer:
         resource_group: "{{ resourcegroup }}"
         name: weblb
         frontend_ip_configurations:
@@ -38,7 +38,7 @@
       register: lb
 
     - name: Update network interface for webserver1
-      azure_rm_networkinterface:
+      azure.azcollection.azure_rm_networkinterface:
         name: "webserver1_nic01"
         resource_group: "{{ resourcegroup }}"
         virtual_network: "{{ virtualnetwork_name }}"
@@ -47,14 +47,14 @@
         ip_configurations:
           - name: "webserver1_nic01_ipconfig"
             public_ip_address_name: "public_ip_webserver1"
-            primary: True
+            primary: true
             load_balancer_backend_address_pools:
               - "{{ lb.state.backend_address_pools[0].id }}"
               - name: backendaddrpool0
                 load_balancer: weblb
 
     - name: Update network interface for webserver2
-      azure_rm_networkinterface:
+      azure.azcollection.azure_rm_networkinterface:
         name: "webserver2_nic01"
         resource_group: "{{ resourcegroup }}"
         virtual_network: "{{ virtualnetwork_name }}"
@@ -63,7 +63,7 @@
         ip_configurations:
           - name: "webserver2_nic01_ipconfig"
             public_ip_address_name: "public_ip_webserver2"
-            primary: True
+            primary: true
             load_balancer_backend_address_pools:
               - "{{ lb.state.backend_address_pools[0].id }}"
               - name: backendaddrpool0

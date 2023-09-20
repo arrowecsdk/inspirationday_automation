@@ -53,8 +53,8 @@
         inventory: Azure Inventory
         source: azure_rm
         credential: AzureCred
-        overwrite: True
-        update_on_launch: True
+        overwrite: true
+        update_on_launch: true
         organization: Default
         source_vars:
           keyed_groups:
@@ -73,8 +73,8 @@
         inventory: AWS Inventory
         source: ec2
         credential: AWSCred
-        overwrite: True
-        update_on_launch: True
+        overwrite: true
+        update_on_launch: true
         organization: Default
         source_vars:
           keyed_groups:
@@ -94,41 +94,41 @@
         extra_vars: "{{ item.extra }}"
       loop:
         - {
-            name: "Azure RG",
-            playbook: "Azure-Playbook/01_azure_rg.yml",
-            cred: "AzureCred",
-            extra: '{ "none": "empty" }',
-          }
+          name: "Azure RG",
+          playbook: "Azure-Playbook/01_azure_rg.yml",
+          cred: "AzureCred",
+          extra: '{ "none": "empty" }',
+        }
         - {
-            name: "Azure Network",
-            playbook: "Azure-Playbook/02_azure_network.yml",
-            cred: "AzureCred",
-            extra: '{ "none": "empty" }',
-          }
+          name: "Azure Network",
+          playbook: "Azure-Playbook/02_azure_network.yml",
+          cred: "AzureCred",
+          extra: '{ "none": "empty" }',
+        }
         - {
-            name: "Azure Compute",
-            playbook: "Azure-Playbook/03_azure_compute.yml",
-            cred: "AzureCred",
-            extra: '{ "ssh_public_key": "{{ ssh_public_key }}"}',
-          }
+          name: "Azure Compute",
+          playbook: "Azure-Playbook/03_azure_compute.yml",
+          cred: "AzureCred",
+          extra: '{ "ssh_public_key": "{{ ssh_public_key }}"}',
+        }
         - {
-            name: "Azure Compute Conf",
-            playbook: "Azure-Playbook/04_azure_compute_conf.yml",
-            cred: "AzureVMCred",
-            extra: '{ "none": "empty" }',
-          }
+          name: "Azure Compute Conf",
+          playbook: "Azure-Playbook/04_azure_compute_conf.yml",
+          cred: "AzureVMCred",
+          extra: '{ "none": "empty" }',
+        }
         - {
-            name: "Azure Loadbalancer",
-            playbook: "Azure-Playbook/05_azure_loadbalancer.yml",
-            cred: "AzureCred",
-            extra: '{ "none": "empty" }',
-          }
+          name: "Azure Loadbalancer",
+          playbook: "Azure-Playbook/05_azure_loadbalancer.yml",
+          cred: "AzureCred",
+          extra: '{ "none": "empty" }',
+        }
         - {
-            name: "Azure DNS",
-            playbook: "Azure-Playbook/06_azure_domain.yml",
-            cred: "AzureCred",
-            extra: '{ "none": "empty" }',
-          }
+          name: "Azure DNS",
+          playbook: "Azure-Playbook/06_azure_domain.yml",
+          cred: "AzureCred",
+          extra: '{ "none": "empty" }',
+        }
 
     - name: Create Azure VM credential
       awx.awx.credential:

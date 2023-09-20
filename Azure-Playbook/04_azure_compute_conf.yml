@@ -1,7 +1,7 @@
 ---
 - name: Azure Webserver Compute Configuration
   hosts: tag_Ansible_webserver
-  become: yes
+  become: true
 
   tasks:
     - name: Install Packages
@@ -16,26 +16,26 @@
       ansible.builtin.systemd:
         name: httpd
         state: started
-        enabled: yes
+        enabled: true
 
     - name: Enable SSH in firewall
-      ansible.builtin.firewalld:
+      ansible.posix.firewalld:
         zone: public
         service: ssh
-        permanent: yes
+        permanent: true
         state: enabled
       notify: reload firewall
 
     - name: Enable http in firewall
-      ansible.builtin.firewalld:
+      ansible.posix.firewalld:
         zone: public
         service: http
-        permanent: yes
+        permanent: true
         state: enabled
       notify: reload firewall
 
   handlers:
-    - name: reload firewall
+    - name: Reload firewall
       ansible.builtin.systemd:
         name: firewalld
         state: reloaded

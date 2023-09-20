@@ -1,5 +1,6 @@
 ---
-- hosts: localhost
+- name: Clean Up AWS
+  hosts: localhost
   connection: local
   vars:
     vpc_name: "Tower-vpc"
@@ -39,9 +40,9 @@
 
     - name: Set Subnet cidr_block
       ansible.builtin.set_fact:
-        subnet_cidr: "{{ subnets.subnets|map(attribute='cidr_block')|list }}"
+        subnet_cidr: "{{ subnets.subnets | map(attribute='cidr_block') | list }}"
 
-    - name: vpc internet gateway
+    - name: Vpc internet gateway
       amazon.aws.ec2_vpc_igw:
         region: "{{ region }}"
         vpc_id: "{{ vpc.vpcs[0].id }}"

@@ -6,7 +6,7 @@
     location: "northeurope"
 
   tasks:
-    - name: create Resource Group
-      azure_rm_resourcegroup:
+    - name: Create Resource Group
+      azure.azcollection.azure_rm_resourcegroup:
         name: "{{ resourcegroup }}"
         location: "{{ location }}"
