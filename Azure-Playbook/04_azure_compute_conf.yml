@@ -4,7 +4,7 @@
   become: yes
 
   tasks:
-    - name: Install firewalld
+    - name: Install Packages
       ansible.builtin.package:
         name:
           - firewalld
