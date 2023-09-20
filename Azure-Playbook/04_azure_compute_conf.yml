@@ -42,7 +42,7 @@
       notify: reload firewall
 
     handlers:
-    - name: reload firewall
-      systemd:
-        name: firewalld
-        state: reloaded
+      - name: reload firewall
+        systemd:
+          name: firewalld
+          state: reloaded
