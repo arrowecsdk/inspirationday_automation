@@ -1,0 +1,12 @@
+---
+- name: Azure Webserver Resource Group
+  hosts: localhost
+  vars:
+    resourcegroup: "webserver"
+    location: "northeurope"
+
+  tasks:
+    - name: create Resource Group
+      azure_rm_resourcegroup:
+        name: "{{ resourcegroup }}"
+        location: "{{ location }}"

@@ -1,0 +1,61 @@
+---
+- name: Azure Webserver Infrastructure
+  hosts: localhost
+  vars:
+    resourcegroup: "webserver"
+    location: "northeurope"
+    user: "azureuser"
+    virtualnetwork_name: "webserver-net"
+    project_name: "ansible"
+    cidr: "10.0.0.0/16"
+    webserver_subnet: "webserver_subnet"
+    cidr_public_a: "10.0.1.0/24"
+    availabilityset: "webserver_avail"
+    webserver_nsg: "webserver_nsg"
+
+  tasks:
+    - name: Create a virtual network
+      azure_rm_virtualnetwork:
+        resource_group: "{{ resourcegroup }}"
+        name: "{{ virtualnetwork_name }}"
+        address_prefixes_cidr:
+          - "{{ cidr }}"
+
+    - name: Create a subnet
+      azure_rm_subnet:
+        resource_group: "{{ resourcegroup }}"
+        virtual_network_name: "{{ virtualnetwork_name }}"
+        name: "{{ webserver_subnet }}"
+        address_prefix_cidr: "{{ cidr_public_a }}"
+
+    - name: Create an availability set with advanced options
+      azure_rm_availabilityset:
+        name: "{{ availabilityset }}"
+        location: "{{ location }}"
+        resource_group: "{{ resourcegroup }}"
+        platform_update_domain_count: 5
+        platform_fault_domain_count: 3
+        sku: Aligned
+
+    - name: Create Security Group
+      azure_rm_securitygroup:
+        resource_group: "{{ resourcegroup }}"
+        name: "{{ webserver_nsg }}"
+        purge_rules: yes
+        rules:
+          - name: "AllowSSH"
+            protocol: Tcp
+            source_address_prefix:
+              - "0.0.0.0/0"
+            destination_port_range: 22
+            access: Allow
+            priority: 101
+            direction: Inbound
+          - name: "AllowHTTP"
+            protocol: Tcp
+            source_address_prefix:
+              - "0.0.0.0/0"
+            destination_port_range:
+              - 80
+            access: Allow
+            priority: 102

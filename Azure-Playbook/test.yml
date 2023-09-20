@@ -1,8 +1,0 @@
----
-- name: Azure Create RG
-  hosts: localhost
-  connection: local
-
-  tasks:
-    - name: Get facts for all resource groups
-      azure_rm_resourcegroup_info:
