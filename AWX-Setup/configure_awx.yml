@@ -108,5 +108,5 @@
             name: "Azure Compute",
             playbook: "Azure-Playbook/03_azure_compute.yml",
             cred: "AzureCred",
-            extra: "ssh_public_key: '{{ ssh_public_key }}'",
+            extra: '{ "ssh_public_key": "{{ ssh_public_key }}"}',
           }
