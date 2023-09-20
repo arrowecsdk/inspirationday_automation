@@ -3,6 +3,9 @@
   hosts: localhost
   connection: local
 
+  vars:
+    ssh_public_key: "{{lookup('file', '~/.ssh/id_rsa.pub') }}"
+
   tasks:
     - name: Remove Demo Template
       awx.awx.job_template:
@@ -87,19 +90,23 @@
         organization: Default
         state: present
         credential: "{{ item.cred }}"
+        extravars: "{{ item.extra }}"
       loop:
         - {
             name: "Azure RG",
             playbook: "Azure-Playbook/01_azure_rg.yml",
             cred: "AzureCred",
+            extra: "",
           }
         - {
             name: "Azure Network",
             playbook: "Azure-Playbook/02_azure_network.yml",
             cred: "AzureCred",
+            extra: "",
           }
         - {
             name: "Azure Compute",
             playbook: "Azure-Playbook/03_azure_compute.yml",
             cred: "AzureCred",
+            extra: "ssh_public_key: '{{ ssh_public_key }}'",
           }
