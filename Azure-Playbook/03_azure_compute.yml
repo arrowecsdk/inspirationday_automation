@@ -45,8 +45,8 @@
         jid: "{{ item.ansible_job_id }}"
       register: job_result
       until: job_result.finished
-      retries: 30
-      delay: 5
+      retries: 120
+      delay: 2
       with_items: "{{ create_nic.results }}"
 
     - name: Create Webservers
