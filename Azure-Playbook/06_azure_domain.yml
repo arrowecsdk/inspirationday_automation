@@ -16,7 +16,7 @@
       register: lb_ip
 
     - name: Debug
-      ansible.builtin.debug
+      ansible.builtin.debug:
         msg: "{{ lb_ip }}"
 
     - name: Create A record for Loadbalancer
