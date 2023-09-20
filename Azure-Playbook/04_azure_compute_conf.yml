@@ -1,0 +1,48 @@
+---
+- name: Azure Webserver Compute Configuration
+  hosts: tag_Ansible_webserver
+  become: yes
+
+  tasks:
+    - name: Install firewalld
+      yum:
+        name: firewalld
+        state: latest
+
+    - name: Install httpd
+      yum:
+        name: httpd
+        state: latest
+
+    - name: Install git
+      yum:
+        name: git
+        state: latest
+
+    - name: Enable and start httpd
+      systemd:
+        name: httpd
+        state: started
+        enabled: yes
+
+    - name: Enable SSH in firewall
+      firewalld:
+        zone: public
+        service: ssh
+        permanent: yes
+        state: enabled
+      notify: reload firewall
+
+    - name: Enable http in firewall
+      firewalld:
+        zone: public
+        service: http
+        permanent: yes
+        state: enabled
+      notify: reload firewall
+
+    handlers:
+    - name: reload firewall
+      systemd:
+        name: firewalld
+        state: reloaded

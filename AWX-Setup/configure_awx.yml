@@ -111,6 +111,12 @@
             cred: "AzureCred",
             extra: '{ "ssh_public_key": "{{ ssh_public_key }}"}',
           }
+        - {
+            name: "Azure Compute Conf",
+            playbook: "Azure-Playbook/04_azure_compute_conf.yml",
+            cred: "AzureVMCred",
+            extra: '{ "none": "empty" }',
+          }
 
     - name: Create Azure VM credential
       awx.awx.credential:

@@ -4,7 +4,7 @@
   become: yes
 
   tasks:
-  - name: Download Website from Github
-    git:
-      repo: "{{ gitrepo }}"
-      dest: "/var/www/html"
+    - name: Download Website from Github
+      git:
+        repo: "{{ gitrepo }}"
+        dest: "/var/www/html"
