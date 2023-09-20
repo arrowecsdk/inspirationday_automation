@@ -5,28 +5,21 @@
 
   tasks:
     - name: Install firewalld
-      yum:
-        name: firewalld
-        state: latest
-
-    - name: Install httpd
-      yum:
-        name: httpd
-        state: latest
-
-    - name: Install git
-      yum:
-        name: git
-        state: latest
+      ansible.builtin.package:
+        name:
+          - firewalld
+          - httpd
+          - git
+        state: present
 
     - name: Enable and start httpd
-      systemd:
+      ansible.builtin.systemd:
         name: httpd
         state: started
         enabled: yes
 
     - name: Enable SSH in firewall
-      firewalld:
+      ansible.builtin.firewalld:
         zone: public
         service: ssh
         permanent: yes
@@ -34,7 +27,7 @@
       notify: reload firewall
 
     - name: Enable http in firewall
-      firewalld:
+      ansible.builtin.firewalld:
         zone: public
         service: http
         permanent: yes
@@ -43,6 +36,6 @@
 
   handlers:
     - name: reload firewall
-      systemd:
+      ansible.builtin.systemd:
         name: firewalld
         state: reloaded
