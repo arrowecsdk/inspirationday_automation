@@ -123,6 +123,12 @@
             cred: "AzureCred",
             extra: '{ "none": "empty" }',
           }
+        - {
+            name: "Azure DNS",
+            playbook: "Azure-Playbook/06_azure_domain.yml",
+            cred: "AzureCredDNS",
+            extra: '{ "none": "empty" }',
+          }
 
     - name: Create Azure VM credential
       awx.awx.credential:

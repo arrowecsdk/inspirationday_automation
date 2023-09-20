@@ -1,0 +1,25 @@
+---
+- name: Azure Webserver Domain
+  hosts: localhost
+  vars:
+    resourcegroup: "webserver"
+    resourcegroupdns: "dnszones"
+    location: "northeurope"
+    domain: "azure.arrowdemo.dk"
+    hostname: "website"
+
+  tasks:
+    - name: Get LB Public IP
+      azure_rm_publicipaddress_info:
+        name: weblb_pub_ip
+        resource_group: "{{ resourcegroup }}"
+      register: lb_ip
+
+    - name: Create A record for Loadbalancer
+      azure_rm_dnsrecordset:
+        resource_group: "{{ resourcegroupdns }}"
+        relative_name: "{{ hostname }}"
+        zone_name: "{{ domain }}"
+        record_type: A
+        records:
+          - entry: "{{ lb_ip.publicipaddresses[0].ip_address }}"
