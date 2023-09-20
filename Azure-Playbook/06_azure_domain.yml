@@ -3,7 +3,7 @@
   hosts: localhost
   vars:
     resourcegroup: "webserver"
-    resourcegroupdns: "dnszones"
+    resourcegroupdns: "dnszone"
     location: "northeurope"
     domain: "netsec.arrowdemo.dk"
     hostname: "website"
