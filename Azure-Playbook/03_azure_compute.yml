@@ -26,7 +26,7 @@
 
     - name: Create a network interface for webservers
       azure_rm_networkinterface:
-        name: "webserver1_nic01"
+        name: "{{ item }}_nic01"
         resource_group: "{{ resourcegroup }}"
         virtual_network: "{{ virtualnetwork_name }}"
         subnet_name: "{{ webserver_subnet }}"
@@ -36,6 +36,18 @@
             public_ip_address_name: "public_ip_{{ item }}"
             primary: True
       loop: "{{ servers }}"
+      async: 1000
+      poll: 0
+      register: create_nic
+
+    - name: Wait for Network Interfaces
+      ansible.builtin.async_status:
+        jid: "{{ item.ansible_job_id }}"
+      register: job_result
+      until: job_result.finished
+      retries: 30
+      delay: 5
+      with_items: "{{ create_nic.results }}"
 
     - name: Create Webservers
       azure_rm_virtualmachine:
