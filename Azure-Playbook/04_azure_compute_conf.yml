@@ -41,8 +41,8 @@
         state: enabled
       notify: reload firewall
 
-    handlers:
-      - name: reload firewall
-        systemd:
-          name: firewalld
-          state: reloaded
+  handlers:
+    - name: reload firewall
+      systemd:
+        name: firewalld
+        state: reloaded
