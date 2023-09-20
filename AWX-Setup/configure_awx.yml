@@ -96,13 +96,13 @@
             name: "Azure RG",
             playbook: "Azure-Playbook/01_azure_rg.yml",
             cred: "AzureCred",
-            extra: "",
+            extra: '{ "none": "empty" }',
           }
         - {
             name: "Azure Network",
             playbook: "Azure-Playbook/02_azure_network.yml",
             cred: "AzureCred",
-            extra: "",
+            extra: '{ "none": "empty" }',
           }
         - {
             name: "Azure Compute",
