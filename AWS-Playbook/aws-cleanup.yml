@@ -1,0 +1,116 @@
+---
+- name: Remove AWS Webserver Infrastructure
+  hosts: localhost
+  vars:
+    vpc_name: "webserver-vpc"
+    project_name: "ansible"
+    region: "eu-west-1"
+
+  tasks:
+    - name: Get VPC info
+      amazon.aws.ec2_vpc_net_info:
+        region: "{{ region }}"
+        filters:
+          "tag:Name": "{{ vpc_name }}"
+      register: vpc
+
+    - name: Get VPC route table info
+      amazon.aws.ec2_vpc_route_table_info:
+        region: "{{ region }}"
+        filters:
+          vpc-id: "{{ vpc.vpcs[0].id }}"
+      register: routetable
+
+    - name: Get Subnets info
+      amazon.aws.ec2_vpc_subnet_info:
+        region: "{{ region }}"
+        filters:
+          vpc-id: "{{ vpc.vpcs[0].id }}"
+      register: subnets
+
+    - name: Set Subnet cidr_block
+      ansible.builtin.set_fact:
+        subnet_cidr: "{{ subnets.subnets|map(attribute='cidr_block')|list }}"
+
+    - name: Get ELB DNS info
+      amazon.aws.elb_application_lb_info:
+        names: "webserverelb"
+        region: "{{ region }}"
+      register: elb
+
+    - name: Get Internet Gateway info
+      amazon.aws.ec2_vpc_igw_info:
+        region: "{{ region }}"
+      register: igw_info
+
+    - name: Get ec2 info
+      amazon.aws.ec2_instance_info:
+        region: "{{ region }}"
+        filters:
+          "tag:Ansible": webserver
+          instance-state-name: ["running"]
+      register: ec2
+
+    - name: Delete ELB
+      amazon.aws.elb_application_lb:
+        name: "webserverelb"
+        state: absent
+        region: "{{ region }}"
+        wait: yes
+        wait_timeout: 600
+
+    - name: Terminate ec2 instances
+      amazon.aws.ec2_instance:
+        state: "absent"
+        region: "{{ region }}"
+        instance_ids: "{{ item }}"
+      loop:
+        - "{{ ec2['instances'][0].instance_id }}"
+        - "{{ ec2['instances'][1].instance_id }}"
+      ignore_errors: yes
+
+    - name: Delete Route53 record
+      amazon.aws.route53:
+        state: absent
+        zone: "{{ domain }}"
+        record: "{{ hostname }}.{{ domain }}"
+        type: A
+        value: "{{ elb.load_balancers[0].dns_name }}"
+        alias: True
+        alias_hosted_zone_id: "{{ elb.load_balancers[0].canonical_hosted_zone_id }}"
+      ignore_errors: yes
+
+    - name: Pause for 1 minutes to terminate ec2 instances
+      pause:
+        minutes: 1
+
+    - name: Delete Subnets
+      amazon.aws.ec2_vpc_subnet:
+        region: "{{ region }}"
+        state: absent
+        vpc_id: "{{ vpc.vpcs[0].id }}"
+        cidr: "{{ item }}"
+      loop: "{{ subnet_cidr }}"
+
+    - name: Delete vpc internet gateway
+      amazon.aws.ec2_vpc_igw:
+        region: "{{ region }}"
+        vpc_id: "{{ vpc.vpcs[0].id }}"
+        state: absent
+
+    - name: Delete ELB Target Group
+      community.aws.elb_target_group:
+        name: webservers
+        region: "{{ region }}"
+        protocol: http
+        port: 80
+        vpc_id: "{{ vpc.vpcs[0].id }}"
+        state: absent
+        wait_timeout: 200
+
+    - name: Delete VPC
+      amazon.aws.ec2_vpc_net:
+        name: "{{ vpc_name }}"
+        cidr_block: "{{ vpc.vpcs[0].cidr_block }}"
+        region: "{{ region }}"
+        state: absent

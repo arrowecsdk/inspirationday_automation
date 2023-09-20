@@ -1,0 +1,70 @@
+---
+- name: Azure Webserver Loadbalancer
+  hosts: localhost
+  vars:
+    resourcegroup: "webserver"
+    location: "northeurope"
+    virtualnetwork_name: "webserver-net"
+    webserver_subnet: "webserver_subnet"
+    webserver_nsg: "webserver_nsg"
+
+  tasks:
+  - name: Create a public ip address for loadbalancer
+    azure_rm_publicipaddress:
+      resource_group: "{{ resourcegroup }}"
+      name: weblb_pub_ip
+      allocation_method: static
+      domain_name: "weblb"
+
+  - name: create load balancer
+    azure_rm_loadbalancer:
+      resource_group: "{{ resourcegroup }}"
+      name: weblb
+      frontend_ip_configurations:
+        - name: weblb_frontend
+          public_ip_address: weblb_pub_ip
+      backend_address_pools:
+        - name: backendaddrpool0
+      probes:
+        - name: prob0
+          port: 80
+      load_balancing_rules:
+        - name: lbrbalancingrule0
+          frontend_ip_configuration: weblb_frontend
+          backend_address_pool: backendaddrpool0
+          frontend_port: 80
+          backend_port: 80
+          probe: prob0
+    register: lb
+
+  - name: Update network interface for webserver1
+    azure_rm_networkinterface:
+      name: "webserver1_nic01"
+      resource_group: "{{ resourcegroup }}"
+      virtual_network: "{{ virtualnetwork_name }}"
+      subnet_name: "{{ webserver_subnet }}"
+      security_group: "{{ webserver_nsg }}"
+      ip_configurations:
+        - name: "webserver1_nic01_ipconfig"
+          public_ip_address_name: "public_ip_webserver1"
+          primary: True
+          load_balancer_backend_address_pools:
+            - "{{ lb.state.backend_address_pools[0].id }}"
+            - name: backendaddrpool0
+              load_balancer: weblb
+
+  - name: Update network interface for webserver2
+    azure_rm_networkinterface:
+      name: "webserver2_nic01"
+      resource_group: "{{ resourcegroup }}"
+      virtual_network: "{{ virtualnetwork_name }}"
+      subnet_name: "{{ webserver_subnet }}"
+      security_group: "{{ webserver_nsg }}"
+      ip_configurations:
+        - name: "webserver2_nic01_ipconfig"
+          public_ip_address_name: "public_ip_webserver2"
+          primary: True
+          load_balancer_backend_address_pools:
+            - "{{ lb.state.backend_address_pools[0].id }}"
+            - name: backendaddrpool0
+              load_balancer: weblb

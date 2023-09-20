@@ -1,0 +1,14 @@
+---
+- name: Azure Webserver Infrastructure
+  hosts: localhost
+  vars:
+    resourcegroup: "webserver"
+    location: "northeurope"
+
+  tasks:
+  - name: Delete Resource Group and Content
+    azure_rm_resourcegroup:
+      name: "{{ resourcegroup }}"
+      location: "{{ location }}"
+      force_delete_nonempty: yes
+      state: absent

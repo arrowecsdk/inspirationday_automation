@@ -1,0 +1,11 @@
+---
+- name: AWS Webserver Compute Website
+  hosts: tag_Ansible_webserver
+  become: yes
+  user: ec2-user
+  vars:
+  tasks:
+  - name: Download Website from Github
+    git:
+      repo: "{{ gitrepo }}"
+      dest: "/var/www/html"
