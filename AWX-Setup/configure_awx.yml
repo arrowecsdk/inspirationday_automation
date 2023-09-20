@@ -98,3 +98,8 @@
             playbook: "Azure-Playbook/02_azure_network.yml",
             cred: "AzureCred",
           }
+        - {
+            name: "Azure Compute",
+            playbook: "Azure-Playbook/03_azure_compute.yml",
+            cred: "AzureCred",
+          }

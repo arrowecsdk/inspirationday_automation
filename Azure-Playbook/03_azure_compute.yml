@@ -1,0 +1,74 @@
+---
+- name: Azure Webserver Infrastructure
+  hosts: localhost
+  vars:
+    resourcegroup: "webserver"
+    location: "northeurope"
+    user: "azureuser"
+    virtualnetwork_name: "webserver-net"
+    project_name: "ansible"
+    cidr: "10.0.0.0/16"
+    webserver_subnet: "webserver_subnet"
+    cidr_public_a: "10.0.1.0/24"
+    availabilityset: "webserver_avail"
+    webserver_nsg: "webserver_nsg"
+    servers:
+      - webserver1
+      - webserver2
+
+  tasks:
+    - name: Create a public ip address for webservers
+      azure_rm_publicipaddress:
+        resource_group: "{{ resourcegroup }}"
+        name: "public_ip_{{ item }}"
+        allocation_method: static
+      loop: "{{ servers }}"
+
+    - name: Create a network interface for webservers
+      azure_rm_networkinterface:
+        name: "webserver1_nic01"
+        resource_group: "{{ resourcegroup }}"
+        virtual_network: "{{ virtualnetwork_name }}"
+        subnet_name: "{{ webserver_subnet }}"
+        security_group: "{{ webserver_nsg }}"
+        ip_configurations:
+          - name: "{{ item }}_nic01_ipconfig"
+            public_ip_address_name: "public_ip_{{ item }}"
+            primary: True
+      loop: "{{ servers }}"
+
+    - name: Create Webservers
+      azure_rm_virtualmachine:
+        resource_group: "{{ resourcegroup }}"
+        name: "{{ item }}"
+        vm_size: Standard_A1_v2
+        os_type: Linux
+        ssh_password_enabled: false
+        ssh_public_keys:
+          - path: "/home/{{ user }}/.ssh/authorized_keys"
+            key_data: "{{ ssh_public_key }}"
+        availability_set: "{{ availabilityset }}"
+        managed_disk_type: Standard_LRS
+        admin_username: "{{ user }}"
+        network_interfaces: "{{ item }}_nic01"
+        image:
+          offer: CentOS
+          publisher: OpenLogic
+          sku: "8.0"
+          version: latest
+        tags:
+          Ansible: "webserver"
+      loop: "{{ servers }}"
+      async: 1000
+      poll: 0
+      register: create_vm
+
+    - name: Wait for VM's
+      ansible.builtin.async_status:
+        jid: "{{ item.ansible_job_id }}"
+        mode: status
+      retries: 600
+      delay: 5
+      loop: "{{ create_vm.results }}"
+      register: async_loop_jobs
+      until: async_loop_jobs.finished
