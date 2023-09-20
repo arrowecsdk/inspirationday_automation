@@ -121,7 +121,7 @@
             name: "Azure Loadbalancer",
             playbook: "Azure-Playbook/05_azure_loadbalancer.yml",
             cred: "AzureCred",
-            extra: '{ "none": "empty" }',,
+            extra: '{ "none": "empty" }',
           }
 
     - name: Create Azure VM credential
