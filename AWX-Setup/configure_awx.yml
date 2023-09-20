@@ -126,7 +126,7 @@
         - {
             name: "Azure DNS",
             playbook: "Azure-Playbook/06_azure_domain.yml",
-            cred: "AzureCredDNS",
+            cred: "AzureCred",
             extra: '{ "none": "empty" }',
           }
 
