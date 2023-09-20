@@ -90,7 +90,7 @@
         organization: Default
         state: present
         credential: "{{ item.cred }}"
-        extravars: "{{ item.extra }}"
+        extra_vars: "{{ item.extra }}"
       loop:
         - {
             name: "Azure RG",
