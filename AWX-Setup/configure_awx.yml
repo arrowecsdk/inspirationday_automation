@@ -32,6 +32,11 @@
         organization: Default
         state: absent
 
+    - name: Add EE to the controller instance
+      awx.awx.execution_environment:
+        name: "my_ee"
+        image: jesperberth/my_ee:0.0.2
+
     - name: Create project
       awx.awx.project:
         name: Project
@@ -228,28 +233,33 @@
         state: present
         credential: "{{ item.cred }}"
         extra_vars: "{{ item.extra }}"
+        execution_environment: "{{ item.ee }}"
       loop:
         - {
           name: "AWS Infra",
           playbook: "AWS-Playbook/01_aws_infra.yml",
           cred: "AWSCred",
           extra: '{ "ssh_public_key": "{{ ssh_public_key }}"}',
+          ee: '',
         }
         - {
           name: "AWS Compute Conf",
           playbook: "AWS-Playbook/02_aws_compute_conf.yml",
           cred: "AWSVMCred",
           extra: '{ "none": "empty" }',
+          ee: '',
         }
         - {
           name: "AWS Loadbalancer",
           playbook: "AWS-Playbook/03_aws_loadbalancer.yml",
           cred: "AWSCred",
           extra: '{ "none": "empty" }',
+          ee: 'my_ee',
         }
         - {
           name: "AWS DNS",
           playbook: "AWS-Playbook/04_aws_domain.yml",
           cred: "AWSCred",
           extra: '{ "none": "empty" }',
+          ee: '',
         }
