@@ -214,7 +214,7 @@
         state: present
         organization: Default
         inputs:
-          username: ec2_user
+          username: ec2-user
           ssh_key_data: "{{ ssh_private_key }}"
 
     - name: Create AWS Templates
@@ -234,4 +234,10 @@
           playbook: "AWS-Playbook/01_aws_infra.yml",
           cred: "AWSCred",
           extra: '{ "ssh_public_key": "{{ ssh_public_key }}"}',
+        }
+        - {
+          name: "AWS Compute Conf",
+          playbook: "AWS-Playbook/02_aws_compute_conf.yml",
+          cred: "AWSVMCred",
+          extra: '{ "none": "empty" }',
         }

@@ -109,7 +109,7 @@
         key_name: "{{ aws_key }}"
         region: "{{ region }}"
         instance_type: t2.micro
-        image_id: ami-0ca7795427fb03aa0
+        image_id: ami-08f32efd140b7d89f
         wait: true
         security_group: "{{ security_group }}"
         vpc_subnet_id: "{{ subnetpublica.subnet.id }}"
@@ -125,7 +125,7 @@
         key_name: "{{ aws_key }}"
         region: "{{ region }}"
         instance_type: t2.micro
-        image_id: ami-0ca7795427fb03aa0
+        image_id: ami-08f32efd140b7d89f
         wait: true
         security_group: "{{ security_group }}"
         vpc_subnet_id: "{{ subnetpublicb.subnet.id }}"
