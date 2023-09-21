@@ -263,6 +263,13 @@
           extra: '{ "none": "empty" }',
           ee: '',
         }
+        - {
+          name: "XX AWS CleanUp",
+          playbook: "AWS-Playbook/xx_aws_cleanup.yml",
+          cred: "AWSCred",
+          extra: '{ "none": "empty" }',
+          ee: '',
+        }
 
     - name: Create AWS workflow job template
       awx.awx.workflow_job_template:

@@ -5,6 +5,8 @@
     vpc_name: "webserver-vpc"
     project_name: "ansible"
     region: "eu-west-1"
+    domain: 'aws.arrowdemo.dk'
+    hostname: 'website'
 
   tasks:
     - name: Get VPC info
@@ -30,7 +32,7 @@
 
     - name: Set Subnet cidr_block
       ansible.builtin.set_fact:
-        subnet_cidr: "{{ subnets.subnets|map(attribute='cidr_block')|list }}"
+        subnet_cidr: "{{ subnets.subnets | map(attribute='cidr_block') | list }}"
 
     - name: Get ELB DNS info
       amazon.aws.elb_application_lb_info:
@@ -56,7 +58,7 @@
         name: "webserverelb"
         state: absent
         region: "{{ region }}"
-        wait: yes
+        wait: true
         wait_timeout: 600
 
     - name: Terminate ec2 instances
@@ -67,7 +69,7 @@
       loop:
         - "{{ ec2['instances'][0].instance_id }}"
         - "{{ ec2['instances'][1].instance_id }}"
-      ignore_errors: yes
+      ignore_errors: true
 
     - name: Delete Route53 record
       amazon.aws.route53:
@@ -76,12 +78,12 @@
         record: "{{ hostname }}.{{ domain }}"
         type: A
         value: "{{ elb.load_balancers[0].dns_name }}"
-        alias: True
+        alias: true
         alias_hosted_zone_id: "{{ elb.load_balancers[0].canonical_hosted_zone_id }}"
-      ignore_errors: yes
+      ignore_errors: true
 
     - name: Pause for 1 minutes to terminate ec2 instances
-      pause:
+      ansible.builtin.pause:
         minutes: 1
 
     - name: Delete Subnets
