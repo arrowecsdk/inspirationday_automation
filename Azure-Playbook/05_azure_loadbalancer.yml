@@ -33,7 +33,7 @@
 
     - name: Update network interface for webservers
       azure.azcollection.azure_rm_networkinterface:
-        name: "webserver1_nic01"
+        name: "{{ item }}_nic01"
         resource_group: "{{ resourcegroup }}"
         virtual_network: "{{ virtualnetwork_name }}"
         subnet_name: "{{ webserver_subnet }}"

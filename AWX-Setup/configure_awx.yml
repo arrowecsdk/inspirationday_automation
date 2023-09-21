@@ -144,7 +144,23 @@
       awx.awx.workflow_job_template:
         name: Azure-workflow
         organization: Default
-        extra_vars: { 'resourcegroup': 'webserver', 'location': 'northeurope', 'project_name': 'ansible', 'user': 'azureuser', 'virtualnetwork_name': 'webserver-net', 'cidr': '10.0.0.0/16', 'webserver_subnet': 'webserver_subnet', 'cidr_public_a': '10.0.1.0/24', 'availabilityset': 'webserver_avail', 'webserver_nsg': 'webserver_nsg', 'servers': ['webserver1','webserver2'], 'resourcegroupdns': 'dnszone', 'domain': 'netsec.arrowdemo.dk', 'hostname': 'website' }
+        extra_vars:
+          - {
+            'resourcegroup': 'webserver',
+            'location': 'northeurope',
+            'project_name': 'ansible',
+            'user': 'azureuser',
+            'virtualnetwork_name': 'webserver-net',
+            'cidr': '10.0.0.0/16',
+            'webserver_subnet': 'webserver_subnet',
+            'cidr_public_a': '10.0.1.0/24',
+            'availabilityset': 'webserver_avail',
+            'webserver_nsg': 'webserver_nsg',
+            'servers': ['webserver1', 'webserver2'],
+            'resourcegroupdns': 'dnszone',
+            'domain': 'netsec.arrowdemo.dk',
+            'hostname': 'website'
+          }
         workflow_nodes:
           - identifier: Azure RG
             unified_job_template:
