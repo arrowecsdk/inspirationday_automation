@@ -290,7 +290,7 @@
               type: job_template
             related:
               success_nodes:
-                - identifier: AWS Compute Conf
+                - identifier: AWS Inventory
                 - identifier: AWS Loadbalancer
           - identifier: AWS Compute Conf
             unified_job_template:
@@ -307,3 +307,10 @@
             unified_job_template:
               name: AWS DNS
               type: job_template
+          - identifier: AWS Inventory
+            unified_job_template:
+              name: aws-source
+              type: inventory_source
+            related:
+              success_nodes:
+                - identifier: AWS Compute Conf
