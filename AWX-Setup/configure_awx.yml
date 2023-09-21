@@ -140,22 +140,53 @@
           username: azureuser
           ssh_key_data: "{{ ssh_private_key }}"
 
-    - name: Create Azure workflow job template
+    - name: Create a workflow job template
       awx.awx.workflow_job_template:
         name: Azure-workflow
-        inventory: Azure Inventory
-        extra_vars: { "foo": "bar", "another-foo": { "barz": "bar2" } }
+        organization: Default
+        extra_vars: { 'resourcegroup': 'webserver', 'location': 'northeurope', 'project_name': 'ansible', 'user': 'azureuser', 'virtualnetwork_name': 'webserver-net', 'cidr': '10.0.0.0/16', 'webserver_subnet': 'webserver_subnet', 'cidr_public_a': '10.0.1.0/24', 'availabilityset': 'webserver_avail', 'webserver_nsg': 'webserver_nsg', 'servers': ['webserver1','webserver2'], 'resourcegroupdns': 'dnszone', 'domain': 'netsec.arrowdemo.dk', 'hostname': 'website' }
         workflow_nodes:
-          - identifier: node101
+          - identifier: Azure RG
             unified_job_template:
-              organization:
-                name: Default
               name: Azure RG
               type: job_template
-            credentials: []
             related:
               success_nodes:
-              failure_nodes: []
-              always_nodes: []
-              credentials: []
-      register: result
+                - identifier: Azure Network
+          - identifier: Azure Network
+            unified_job_template:
+              name: Azure Network
+              type: job_template
+            related:
+              success_nodes:
+                - identifier: Azure Compute
+                - identifier: Azure Loadbalancer
+          - identifier: Azure Compute
+            unified_job_template:
+              name: Azure Compute
+              type: job_template
+            related:
+              success_nodes:
+                - identifier: Azure Inventory
+          - identifier: Azure Compute Conf
+            unified_job_template:
+              name: Azure Compute Conf
+              type: job_template
+          - identifier: Azure Loadbalancer
+            unified_job_template:
+              name: Azure Loadbalancer
+              type: job_template
+            related:
+              success_nodes:
+                - identifier: Azure DNS
+          - identifier: Azure DNS
+            unified_job_template:
+              name: Azure DNS
+              type: job_template
+          - identifier: Azure Inventory
+            unified_job_template:
+              name: azure-source
+              type: inventory_source
+            related:
+              success_nodes:
+                - identifier: Azure Compute Conf

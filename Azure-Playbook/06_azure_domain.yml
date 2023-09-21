@@ -1,12 +1,6 @@
 ---
 - name: Azure Webserver Domain
   hosts: localhost
-  vars:
-    resourcegroup: "webserver"
-    resourcegroupdns: "dnszone"
-    location: "northeurope"
-    domain: "netsec.arrowdemo.dk"
-    hostname: "website"
 
   tasks:
     - name: Get LB Public IP

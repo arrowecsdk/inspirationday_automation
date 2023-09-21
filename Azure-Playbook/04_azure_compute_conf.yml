@@ -32,7 +32,7 @@
         service: http
         permanent: true
         state: enabled
-      notify: reload firewall
+      notify: Reload firewall
 
   handlers:
     - name: Reload firewall

@@ -1,9 +1,6 @@
 ---
 - name: Azure Webserver Resource Group
   hosts: localhost
-  vars:
-    resourcegroup: "webserver"
-    location: "northeurope"
 
   tasks:
     - name: Create Resource Group

@@ -1,17 +1,6 @@
 ---
 - name: Azure Webserver Infrastructure
   hosts: localhost
-  vars:
-    resourcegroup: "webserver"
-    location: "northeurope"
-    user: "azureuser"
-    virtualnetwork_name: "webserver-net"
-    project_name: "ansible"
-    cidr: "10.0.0.0/16"
-    webserver_subnet: "webserver_subnet"
-    cidr_public_a: "10.0.1.0/24"
-    availabilityset: "webserver_avail"
-    webserver_nsg: "webserver_nsg"
 
   tasks:
     - name: Create a virtual network
@@ -59,3 +48,35 @@
               - 80
             access: Allow
             priority: 102
+
+    - name: Create a public ip address for webservers
+      azure.azcollection.azure_rm_publicipaddress:
+        resource_group: "{{ resourcegroup }}"
+        name: "public_ip_{{ item }}"
+        allocation_method: static
+      loop: "{{ servers }}"
+
+    - name: Create a network interface for webservers
+      azure.azcollection.azure_rm_networkinterface:
+        name: "{{ item }}_nic01"
+        resource_group: "{{ resourcegroup }}"
+        virtual_network: "{{ virtualnetwork_name }}"
+        subnet_name: "{{ webserver_subnet }}"
+        security_group: "{{ webserver_nsg }}"
+        ip_configurations:
+          - name: "{{ item }}_nic01_ipconfig"
+            public_ip_address_name: "public_ip_{{ item }}"
+            primary: true
+      loop: "{{ servers }}"
+      async: 1000
+      poll: 0
+      register: create_nic
+
+    - name: Wait for Network Interfaces
+      ansible.builtin.async_status:
+        jid: "{{ item.ansible_job_id }}"
+      register: job_result
+      until: job_result.finished
+      retries: 120
+      delay: 2
+      with_items: "{{ create_nic.results }}"
