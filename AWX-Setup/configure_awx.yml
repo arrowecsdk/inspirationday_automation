@@ -241,3 +241,9 @@
           cred: "AWSVMCred",
           extra: '{ "none": "empty" }',
         }
+        - {
+          name: "AWS Loadbalancer",
+          playbook: "AWS-Playbook/03_aws_loadbalancer.yml",
+          cred: "AWSCred",
+          extra: '{ "none": "empty" }',
+        }
