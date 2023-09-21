@@ -247,3 +247,9 @@
           cred: "AWSCred",
           extra: '{ "none": "empty" }',
         }
+        - {
+          name: "AWS DNS",
+          playbook: "AWS-Playbook/04_aws_domain.yml",
+          cred: "AWSCred",
+          extra: '{ "none": "empty" }',
+        }
