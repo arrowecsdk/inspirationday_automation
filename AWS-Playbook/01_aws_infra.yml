@@ -1,0 +1,141 @@
+---
+- name: AWS Webserver Infrastructure
+  hosts: localhost
+  vars:
+    vpc_name: "webserver-vpc"
+    project_name: "ansible"
+    region: "eu-west-1"
+    cidr: "10.0.0.0/16"
+    cidr_public_a: "10.0.1.0/24"
+    cidr_public_b: "10.0.4.0/24"
+    zone1: "a"
+    zone2: "b"
+    aws_key: "webserver"
+    security_group: "webserver-sg"
+
+  tasks:
+    - name: Create VPC
+      amazon.aws.ec2_vpc_net:
+        name: "{{ vpc_name }}"
+        cidr_block: "{{ cidr }}"
+        region: "{{ region }}"
+        state: present
+        tags:
+          project: "{{ project_name }}"
+      register: network
+
+    - name: Create subnet public_a
+      amazon.aws.ec2_vpc_subnet:
+        region: "{{ region }}"
+        state: present
+        cidr: "{{ cidr_public_a }}"
+        az: "{{ region }}{{ zone1 }}"
+        vpc_id: "{{ network.vpc.id }}"
+        resource_tags:
+          project: "{{ project_name }}"
+          Name: "public_az_{{ zone1 }}"
+      register: subnetpublica
+
+    - name: Create subnet public_b
+      amazon.aws.ec2_vpc_subnet:
+        region: "{{ region }}"
+        state: present
+        cidr: "{{ cidr_public_b }}"
+        az: "{{ region }}{{ zone2 }}"
+        vpc_id: "{{ network.vpc.id }}"
+        resource_tags:
+          project: "{{ project_name }}"
+          Name: "public_az_{{ zone2 }}"
+      register: subnetpublicb
+
+    - name: Vpc internet gateway
+      amazon.aws.ec2_vpc_igw:
+        region: "{{ region }}"
+        vpc_id: "{{ network.vpc.id }}"
+        state: present
+        tags:
+          project: "{{ project_name }}"
+      register: igw
+
+    - name: Get Route table
+      amazon.aws.ec2_vpc_route_table_info:
+        region: "{{ region }}"
+        filters:
+          vpc-id: "{{ network.vpc.id }}"
+      register: routea
+
+    - name: Setup route tables public az a
+      amazon.aws.ec2_vpc_route_table:
+        region: "{{ region }}"
+        vpc_id: "{{ network.vpc.id }}"
+        lookup: id
+        purge_subnets: false
+        tags:
+          project: "{{ project_name }}"
+        route_table_id: "{{ routea.route_tables[0].id }}"
+        subnets:
+          - "{{ subnetpublica.subnet.id }}"
+          - "{{ subnetpublicb.subnet.id }}"
+        routes:
+          - dest: 0.0.0.0/0
+            gateway_id: "{{ igw.gateway_id }}"
+
+    - name: Set Security Group for VPC
+      amazon.aws.ec2_security_group:
+        name: "{{ security_group }}"
+        description: default VPC security group
+        vpc_id: "{{ network.vpc.id }}"
+        region: "{{ region }}"
+        rules:
+          - proto: tcp
+            ports:
+              - 80
+            cidr_ip: 0.0.0.0/0
+            rule_desc: allow all http
+          - proto: tcp
+            ports:
+              - 22
+            cidr_ip: 0.0.0.0/0
+            rule_desc: allow all ssh
+
+    - name: Create key pair using key_material obtained using 'file' lookup plugin
+      amazon.aws.ec2_key:
+        name: "{{ aws_key }}"
+        region: "{{ region }}"
+        key_material: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+
+    - name: Create Webserver1
+      amazon.aws.ec2_instance:
+        key_name: "{{ aws_key }}"
+        region: "{{ region }}"
+        instance_type: t2.micro
+        image_id: ami-0ca7795427fb03aa0
+        wait: true
+        security_group: "{{ security_group }}"
+        vpc_subnet_id: "{{ subnetpublica.subnet.id }}"
+        network:
+          assign_public_ip: true
+        state: running
+        tags:
+          Name: webserver1
+          Ansible: webserver
+
+    - name: Create Webserver2
+      amazon.aws.ec2_instance:
+        key_name: "{{ aws_key }}"
+        region: "{{ region }}"
+        instance_type: t2.micro
+        image_id: ami-0ca7795427fb03aa0
+        wait: true
+        security_group: "{{ security_group }}"
+        vpc_subnet_id: "{{ subnetpublicb.subnet.id }}"
+        network:
+          assign_public_ip: true
+        state: running
+        tags:
+          Name: webserver2
+          Ansible: webserver
+
+    - name: Pause for 1 minute
+      ansible.builtin.pause:
+        minutes: 1

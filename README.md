@@ -2,7 +2,7 @@
 
 Automation Setup for Arrow Inspiration Day 2023
 
-## Wishlist
+## ToDo List
 
 - [ ] AWX Install folder
 - [ ] AWS Playbooks
@@ -21,6 +21,8 @@ Requires a Linux machine
 In AWS Console create a new IAM user with programatic access
 
 ```bash
+ssh-keygen
+
 python3 -m venv ansible_insp
 
 source ansible_insp/bin/activate
