@@ -145,7 +145,7 @@
         name: Azure-workflow
         organization: Default
         extra_vars:
-          - {
+          {
             'resourcegroup': 'webserver',
             'location': 'northeurope',
             'project_name': 'ansible',
