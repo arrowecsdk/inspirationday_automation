@@ -1,10 +1,6 @@
 ---
 - name: AWS Webserver Loadbalancer
   hosts: localhost
-  vars:
-    vpc_name: "webserver-vpc"
-    project_name: "ansible"
-    region: "eu-west-1"
 
   tasks:
     - name: Get VPC info

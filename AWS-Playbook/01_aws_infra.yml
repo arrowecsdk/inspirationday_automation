@@ -1,17 +1,6 @@
 ---
 - name: AWS Webserver Infrastructure
   hosts: localhost
-  vars:
-    vpc_name: "webserver-vpc"
-    project_name: "ansible"
-    region: "eu-west-1"
-    cidr: "10.0.0.0/16"
-    cidr_public_a: "10.0.1.0/24"
-    cidr_public_b: "10.0.4.0/24"
-    zone1: "a"
-    zone2: "b"
-    aws_key: "webserver"
-    security_group: "webserver-sg"
 
   tasks:
     - name: Create VPC

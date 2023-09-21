@@ -145,7 +145,7 @@
           username: azureuser
           ssh_key_data: "{{ ssh_private_key }}"
 
-    - name: Create a workflow job template
+    - name: Create Azure workflow job template
       awx.awx.workflow_job_template:
         name: Azure-workflow
         organization: Default
@@ -263,3 +263,47 @@
           extra: '{ "none": "empty" }',
           ee: '',
         }
+
+    - name: Create AWS workflow job template
+      awx.awx.workflow_job_template:
+        name: AWS-workflow
+        organization: Default
+        extra_vars:
+          {
+            'region': 'eu-west-1',
+            'vpc_name': 'webserver-vpc',
+            'project_name': 'ansible',
+            'cidr': '10.0.0.0/16',
+            'cidr_public_a': '10.0.1.0/24',
+            'cidr_public_b': '10.0.4.0/24',
+            'zone1': 'a',
+            'zone2': 'b',
+            'aws_key': 'webserver',
+            'security_group': 'webserver-sg',
+            'domain': 'aws.arrowdemo.dk',
+            'hostname': 'website'
+          }
+        workflow_nodes:
+          - identifier: AWS Infra
+            unified_job_template:
+              name: AWS Infra
+              type: job_template
+            related:
+              success_nodes:
+                - identifier: AWS Compute Conf
+                - identifier: AWS Loadbalancer
+          - identifier: AWS Compute Conf
+            unified_job_template:
+              name: AWS Compute Conf
+              type: job_template
+          - identifier: AWS Loadbalancer
+            unified_job_template:
+              name: AWS Loadbalancer
+              type: job_template
+            related:
+              success_nodes:
+                - identifier: AWS DNS
+          - identifier: AWS DNS
+            unified_job_template:
+              name: AWS DNS
+              type: job_template

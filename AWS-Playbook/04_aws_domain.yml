@@ -1,8 +1,6 @@
 ---
 - name: AWS Webserver Route53 Domain
   hosts: localhost
-  vars:
-    region: "eu-west-1"
 
   tasks:
     - name: Get ELB DNS info
