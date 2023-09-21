@@ -134,6 +134,12 @@
           cred: "AzureCred",
           extra: '{ "none": "empty" }',
         }
+        - {
+          name: "XX Azure CleanUp",
+          playbook: "Azure-Playbook/xx_azure_cleanup.yml",
+          cred: "AzureCred",
+          extra: '{ "none": "empty" }',
+        }
 
     - name: Create Azure VM credential
       awx.awx.credential:
