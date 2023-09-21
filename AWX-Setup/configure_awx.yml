@@ -274,7 +274,7 @@
           playbook: "AWS-Playbook/xx_aws_cleanup.yml",
           cred: "AWSCred",
           extra: '{ "none": "empty" }',
-          ee: '',
+          ee: 'my_ee',
         }
 
     - name: Create AWS workflow job template
