@@ -102,7 +102,7 @@
       amazon.aws.ec2_key:
         name: "{{ aws_key }}"
         region: "{{ region }}"
-        key_material: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+        key_material: "{{ ssh_public_key }}"
 
     - name: Create Webserver1
       amazon.aws.ec2_instance:

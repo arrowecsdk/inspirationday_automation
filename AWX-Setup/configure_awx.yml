@@ -230,8 +230,8 @@
         extra_vars: "{{ item.extra }}"
       loop:
         - {
-          name: "Azure RG",
+          name: "AWS Infra",
           playbook: "AWS-Playbook/01_aws_infra.yml",
           cred: "AWSCred",
-          extra: '{ "none": "empty" }',
+          extra: '{ "ssh_public_key": "{{ ssh_public_key }}"}',
         }
