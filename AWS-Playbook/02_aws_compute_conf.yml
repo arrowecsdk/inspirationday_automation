@@ -1,0 +1,47 @@
+---
+- name: AWS Webserver Compute Configuration
+  hosts: tag_Ansible_webserver
+  become: true
+
+  tasks:
+    - name: Install Software
+      ansible.builtin.package:
+        name:
+          - httpd
+          - git
+          - firewalld
+        state: present
+
+    - name: Enable and start httpd
+      ansible.builtin.systemd:
+        name: httpd
+        state: started
+        enabled: true
+
+    - name: Enable SSH in firewall
+      ansible.posix.firewalld:
+        zone: public
+        service: ssh
+        permanent: true
+        state: enabled
+      notify: Reload firewall
+
+    - name: Enable http in firewall
+      ansible.posix.firewalld:
+        zone: public
+        service: http
+        permanent: true
+        state: enabled
+      notify: Reload firewall
+
+    - name: Enable and start firewalld
+      ansible.builtin.systemd:
+        name: firewalld
+        state: started
+        enabled: true
+
+  handlers:
+    - name: Reload firewall
+      ansible.builtin.systemd:
+        name: firewalld
+        state: reloaded
