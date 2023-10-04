@@ -4,11 +4,12 @@ Automation Setup for Arrow Inspiration Day 2023
 
 ## ToDo List
 
-- [ ] AWX Install folder
-- [ ] AWS Playbooks
-- [ ] Azure Playbooks
+- [ * ] AWX Install folder
+- [ * ] AWS Playbooks
+- [ * ] Azure Playbooks
 - [ ] ESP32 AWX Deploy
 - [ ] ESP32 Temp Sensor
+- [ ] Website
 
 ## Guide
 
