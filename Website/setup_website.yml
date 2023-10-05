@@ -14,9 +14,17 @@
 
     - name: Copy Chuck Norris image
       ansible.builtin.copy:
-        src: /root/inspirationday_automation/Website/chuck_norris.jpg
+        src: Website/chuck_norris.jpg
         dest: /var/www/html/chuck_norris.jpg
         owner: root
         group: root
         mode: "0644"
-        remote_src: true
+        remote_src: false
+
+    - name: Copy Index Template
+      ansible.builtin.template:
+        src: Website/index.html.j2
+        dest: /var/www/html/index.html
+        owner: root
+        group: root
+        mode: "0644"
