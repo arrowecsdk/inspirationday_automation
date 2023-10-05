@@ -9,17 +9,13 @@ Automation Setup for Arrow Inspiration Day 2023
 - [x] Azure Playbooks
 - [ ] ESP32 AWX Deploy
 - [ ] ESP32 Temp Sensor
-- [ ] Website
+- [x] Website
 
 ## Guide
 
 ### Step 1 - Deploy AWX in AWS
 
-Requires a Linux machine
-
-#### Step 1.1 - Get AWS Credentials
-
-In AWS Console create a new IAM user with programatic access
+Requires a Linux machine with Python 3.9+
 
 ```bash
 ssh-keygen
@@ -38,11 +34,9 @@ ansible-galaxy install jesperberth.deb_k3s --force
 
 ansible-galaxy install jesperberth.awx_k8s_install --force
 
-cd AWx-Setup
+ansible-playbook AWX-Setup/01_aws_tower_deploy.yml
 
-ansible-playbook 01_aws_tower_deploy.yml
-
-ansible-playbook -i inventory.aws_ec2.yml install_awx_ec2.yml
+ansible-playbook -i AWX-Setup/inventory.aws_ec2.yml AWX-Setup/install_awx_ec2.yml
 
 ```
 
