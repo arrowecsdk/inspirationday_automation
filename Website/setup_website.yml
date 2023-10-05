@@ -7,11 +7,6 @@
     facts: Chuck Norris can kill two stones with one bird
 
   tasks:
-    - name: Deploy Website from git repo
-      ansible.builtin.git:
-        repo: https://github.com/arrowecsdk/inspirationday_automation.git
-        dest: /root/inspirationday_automation
-
     - name: Copy Chuck Norris image
       ansible.builtin.copy:
         src: chuck_norris.jpg
@@ -19,7 +14,6 @@
         owner: root
         group: root
         mode: "0644"
-        remote_src: false
 
     - name: Copy Index Template
       ansible.builtin.template:

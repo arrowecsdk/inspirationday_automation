@@ -14,6 +14,7 @@
 
         img {
             max-width: 100%;
+            width: 800px;
             height: auto;
             border-radius: 8px;
             margin: 20px 0;
@@ -43,6 +44,11 @@
 
         #quote {
             margin: 20px 0;
+            font-size: 40px;
+        }
+        #host {
+            margin: 20px 0;
+            font-size: 20px;
         }
     </style>
 </head>
@@ -55,6 +61,8 @@
     <button onclick="fetchChuckNorrisQuote()">Get Chuck Norris Quote</button>
 
     <p id="quote">{{ facts }}</p>
+
+    <p id="host">Hosted on {{ inventory_hostname }} running {{ ansible_facts['os_family'] }}</p>
 
     <script>
         function fetchChuckNorrisQuote() {
