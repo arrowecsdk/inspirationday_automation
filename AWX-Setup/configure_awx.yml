@@ -294,6 +294,7 @@
             playbook: "Website/setup_website.yml",
             cred: "AWSVMCred",
             extra: '{ "none": "empty" }',
+            ee: "",
           }
 
     - name: Create AWS workflow job template
