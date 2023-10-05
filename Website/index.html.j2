@@ -62,7 +62,7 @@
 
     <p id="quote">{{ facts }}</p>
 
-    <p id="host">Hosted on {{ inventory_hostname }} running {{ ansible_facts['os_family'] }}</p>
+    <p id="host">Hosted on {{ inventory_hostname }} running on {{ ansible_facts['os_family'] }}</p>
 
     <script>
         function fetchChuckNorrisQuote() {
