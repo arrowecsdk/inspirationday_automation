@@ -1,0 +1,10 @@
+---
+- name: Setup Website
+  hosts: tag_Ansible_webserver
+  become: true
+
+  tasks:
+    - name: Deploy Website from git repo
+      ansible.builtin.git:
+        repo: https://github.com/arrowecsdk/inspirationday_automation.git
+        dest: /root/inspirationday_automation

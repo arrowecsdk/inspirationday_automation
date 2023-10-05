@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chuck Norris Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        h1 {
+            color: #3D3D3D;
+        }
+
+        h2 {
+            color: #666;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #quote {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <img src="chuck_norris.jpg" alt="Chuck Norris">
+    <h1>Chuck Norris</h1>
+    <h2>The Legend of Martial Arts</h2>
+
+    <button onclick="fetchChuckNorrisQuote()">Get Chuck Norris Quote</button>
+
+    <p id="quote">{{ facts }}</p>
+
+    <script>
+        function fetchChuckNorrisQuote() {
+            // Fetch a random Chuck Norris quote from the Chuck Norris Quote API
+            fetch('https://api.chucknorris.io/jokes/random')
+                .then(response => response.json())
+                .then(data => {
+                    // Display the quote in the HTML
+                    document.getElementById('quote').innerText = data.value;
+                })
+                .catch(error => console.error('Error fetching Chuck Norris quote:', error));
+        }
+    </script>
+</body>
+
+</html>
