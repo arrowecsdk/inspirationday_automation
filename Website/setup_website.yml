@@ -14,7 +14,7 @@
 
     - name: Copy Chuck Norris image
       ansible.builtin.copy:
-        src: Website/chuck_norris.jpg
+        src: chuck_norris.jpg
         dest: /var/www/html/chuck_norris.jpg
         owner: root
         group: root
@@ -23,7 +23,7 @@
 
     - name: Copy Index Template
       ansible.builtin.template:
-        src: Website/index.html.j2
+        src: index.html.j2
         dest: /var/www/html/index.html
         owner: root
         group: root
