@@ -3,8 +3,19 @@
   hosts: tag_Ansible_webserver
   become: true
 
+  vars:
+    facts: Chuck Norris can kill two stones with one bird
+
   tasks:
     - name: Deploy Website from git repo
       ansible.builtin.git:
         repo: https://github.com/arrowecsdk/inspirationday_automation.git
         dest: /root/inspirationday_automation
+
+    - name: Copy Chuck Norris image
+      ansible.builtin.copy:
+        src: /root/inspirationday_automation/Website/chuck_norris.jpg
+        dest: /var/www/html/chuck_norris.jpg
+        owner: root
+        group: root
+        mode: "0644"
