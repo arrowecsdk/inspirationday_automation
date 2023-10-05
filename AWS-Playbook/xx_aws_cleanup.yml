@@ -120,7 +120,7 @@
     - name: Delete route table
       amazon.aws.ec2_vpc_route_table:
         region: "{{ region }}"
-        vpc_id: "{{ network.vpc.id }}"
+        vpc_id: "{{ vpc.vpcs[0].id }}"
         lookup: id
         route_table_id: "{{ route.id }}"
         state: absent
