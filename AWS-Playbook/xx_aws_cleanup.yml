@@ -131,7 +131,8 @@
         lookup: id
         route_table_id: "{{ route.route_tables[0].id }}"
         routes:
-          -
+          - dest: 10.0.0.0/16
+        purge_routes: true
         state: absent
 
     - name: Delete Security Group for VPC
