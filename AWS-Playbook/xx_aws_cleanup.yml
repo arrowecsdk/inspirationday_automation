@@ -143,9 +143,9 @@
     #     purge_routes: true
     #     state: absent
 
-    - name: Delete VPC
-      amazon.aws.ec2_vpc_net:
-        name: "{{ vpc_name }}"
-        cidr_block: "{{ vpc.vpcs[0].cidr_block }}"
-        region: "{{ region }}"
-        state: absent
+    # - name: Delete VPC
+    #   amazon.aws.ec2_vpc_net:
+    #     name: "{{ vpc_name }}"
+    #     cidr_block: "{{ vpc.vpcs[0].cidr_block }}"
+    #     region: "{{ region }}"
+    #     state: absent
