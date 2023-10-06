@@ -17,12 +17,12 @@
           "tag:Name": "{{ vpc_name }}"
       register: vpc
 
-    - name: Get VPC route table info
-      amazon.aws.ec2_vpc_route_table_info:
-        region: "{{ region }}"
-        filters:
-          vpc-id: "{{ vpc.vpcs[0].id }}"
-      register: routetable
+    # - name: Get VPC route table info
+    #   amazon.aws.ec2_vpc_route_table_info:
+    #     region: "{{ region }}"
+    #     filters:
+    #       vpc-id: "{{ vpc.vpcs[0].id }}"
+    #   register: routetable
 
     - name: Get Subnets info
       amazon.aws.ec2_vpc_subnet_info:
@@ -100,6 +100,12 @@
         region: "{{ region }}"
         gateway_id: None
 
+    - name: Delete vpc internet gateway
+      amazon.aws.ec2_vpc_igw:
+        region: "{{ region }}"
+        vpc_id: "{{ vpc.vpcs[0].id }}"
+        state: absent
+
     - name: Delete Subnets
       amazon.aws.ec2_vpc_subnet:
         region: "{{ region }}"
@@ -107,12 +113,6 @@
         vpc_id: "{{ vpc.vpcs[0].id }}"
         cidr: "{{ item }}"
       loop: "{{ subnet_cidr }}"
-
-    - name: Delete vpc internet gateway
-      amazon.aws.ec2_vpc_igw:
-        region: "{{ region }}"
-        vpc_id: "{{ vpc.vpcs[0].id }}"
-        state: absent
 
     - name: Delete ELB Target Group
       community.aws.elb_target_group:
