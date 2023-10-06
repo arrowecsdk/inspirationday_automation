@@ -93,6 +93,11 @@
       ansible.builtin.pause:
         minutes: 1
 
+    - name: Disassociate gateway from route table
+      amazon.aws.ec2_vpc_route_table:
+        vpc_id: "{{ vpc.vpcs[0].id }}"
+        gateway_id: None
+
     - name: Delete Subnets
       amazon.aws.ec2_vpc_subnet:
         region: "{{ region }}"
