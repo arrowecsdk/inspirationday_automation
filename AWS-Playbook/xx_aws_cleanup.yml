@@ -96,6 +96,7 @@
     - name: Disassociate gateway from route table
       amazon.aws.ec2_vpc_route_table:
         vpc_id: "{{ vpc.vpcs[0].id }}"
+        region: "{{ region }}"
         gateway_id: None
 
     - name: Delete Subnets
