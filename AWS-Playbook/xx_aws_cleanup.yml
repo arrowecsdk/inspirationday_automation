@@ -123,13 +123,32 @@
         state: absent
         wait_timeout: 200
 
-    - name: Delete route table
-      amazon.aws.ec2_vpc_route_table:
+    # - name: Delete route table
+    #   amazon.aws.ec2_vpc_route_table:
+    #     region: "{{ region }}"
+    #     vpc_id: "{{ vpc.vpcs[0].id }}"
+    #     lookup: id
+    #     route_table_id: "{{ route.route_tables[0].id }}"
+    #     state: absent
+
+    - name: Delete Security Group for VPC
+      amazon.aws.ec2_security_group:
+        name: "{{ security_group }}"
+        description: default VPC security group
+        vpc_id: "{{ network.vpc.id }}"
         region: "{{ region }}"
-        vpc_id: "{{ vpc.vpcs[0].id }}"
-        lookup: id
-        route_table_id: "{{ route.route_tables[0].id }}"
         state: absent
+        # rules:
+        #   - proto: tcp
+        #     ports:
+        #       - 80
+        #     cidr_ip: 0.0.0.0/0
+        #     rule_desc: allow all http
+        #   - proto: tcp
+        #     ports:
+        #       - 22
+        #     cidr_ip: 0.0.0.0/0
+        #     rule_desc: allow all ssh
 
     - name: Delete VPC
       amazon.aws.ec2_vpc_net:
