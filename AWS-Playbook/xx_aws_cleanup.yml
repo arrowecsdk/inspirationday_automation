@@ -17,13 +17,6 @@
           "tag:Name": "{{ vpc_name }}"
       register: vpc
 
-    # - name: Get VPC route table info
-    #   amazon.aws.ec2_vpc_route_table_info:
-    #     region: "{{ region }}"
-    #     filters:
-    #       vpc-id: "{{ vpc.vpcs[0].id }}"
-    #   register: routetable
-
     - name: Get Subnets info
       amazon.aws.ec2_vpc_subnet_info:
         region: "{{ region }}"
@@ -134,16 +127,16 @@
         region: "{{ region }}"
         state: absent
 
-    # - name: Delete route table
-    #   amazon.aws.ec2_vpc_route_table:
-    #     region: "{{ region }}"
-    #     vpc_id: "{{ vpc.vpcs[0].id }}"
-    #     lookup: id
-    #     route_table_id: "{{ route.route_tables[0].id }}"
-    #     # routes:
-    #     #   - dest: 10.0.0.0/16
-    #     purge_routes: true
-    #     state: absent
+    - name: Delete route table
+      amazon.aws.ec2_vpc_route_table:
+        region: "{{ region }}"
+        vpc_id: "{{ vpc.vpcs[0].id }}"
+        lookup: id
+        route_table_id: "{{ route.route_tables[0].id }}"
+        # routes:
+        #   - dest: 10.0.0.0/16
+        purge_routes: true
+        state: absent
 
     # - name: Delete VPC
     #   amazon.aws.ec2_vpc_net:
