@@ -130,6 +130,7 @@
         vpc_id: "{{ vpc.vpcs[0].id }}"
         lookup: id
         route_table_id: "{{ route.route_tables[0].id }}"
+        routes:
         state: absent
 
     - name: Delete Security Group for VPC
