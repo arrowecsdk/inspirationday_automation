@@ -7,6 +7,7 @@
     region: "eu-west-1"
     domain: "aws.arrowdemo.dk"
     hostname: "website"
+    security_group: "webserver-sg"
 
   tasks:
     - name: Get VPC info
