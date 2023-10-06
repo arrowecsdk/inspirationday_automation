@@ -136,7 +136,7 @@
       amazon.aws.ec2_security_group:
         name: "{{ security_group }}"
         description: default VPC security group
-        vpc_id: "{{ network.vpc.id }}"
+        vpc_id: "{{ vpc.vpcs[0].id }}"
         region: "{{ region }}"
         state: absent
         # rules:
