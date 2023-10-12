@@ -29,6 +29,12 @@ unsigned long ResetLastDebounceTime = 0;
 
 bool isConnected = false;
 
+String TowerIp = "";
+String TowerOauth = "";
+String TowerWorkFlowBlue = "";
+String TowerWorkFlowRed = "";
+String ID = "";
+
 WiFiManager wifiManager;
 LiquidCrystal_I2C lcd(0x27,16,2);
 
@@ -40,24 +46,74 @@ void display(){
     lcd.print(wifiManager.getWiFiSSID());
 }
 
-void callTower(){
+String getChuck(){
   if (isConnected){
-      HTTPClient http;
+    HTTPClient http;
 
-      http.begin("http://jsonplaceholder.typicode.com/posts/1");
-      http.addHeader("Content-Type", "text/plain");
-      int httpResponseCode = http.PUT("Data");
+    http.begin("https://api.chucknorris.io/jokes/random");
+    int httpCode = http.GET();
 
-      if (httpResponseCode > 0){
-        String response = http.getString();
-        Serial.println(httpResponseCode);
-        Serial.println(response);
+    if (httpCode > 0){
+      String payload = http.getString();
+      Serial.println(httpCode);
+
+      char json[1000];
+      payload.toCharArray(json, 1000);
+      StaticJsonDocument<1000> doc;
+      deserializeJson(doc, json);
+
+      const char* joke = doc["value"];
+
+      return joke;
+    }
+    else {
+      Serial.println("Error on HTTP request");
+    }
+    http.end();
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Chuck Norris");
+    lcd.setCursor(0, 1);
+    lcd.print("Approved ...");
+    delay(3000);
+    display();
+  }
+}
+
+void callTower(String color){
+  if (isConnected){
+    if (color == "Red"){
+      ID = TowerWorkFlowRed;
+    }
+    if (color == "Blue"){
+      ID = TowerWorkFlowBlue;
+    }
+    String joke = getChuck();
+    String token = "Bearer " + TowerOauth;
+    String url = "http://" + TowerIp + "/api/v2/workflow_job_templates/" + ID + "/launch/";
+
+    HTTPClient http;
+
+    http.begin(url);
+    http.addHeader("Content-Type", "application/json");
+    http.addHeader("Authorization", token);
+    int httpResponseCode = http.POST("");
+
+    if (httpResponseCode > 0)
+    {
+      String response = http.getString();
+      Serial.println(httpResponseCode);
+      Serial.println(response);
       }
       else {
         Serial.println("Error on HTTP PUT request");
         Serial.println(httpResponseCode);
       }
       http.end();
+      Serial.println(token);
+      Serial.println(url);
+      Serial.println(joke);
+      Serial.println(ID);
       delay(3000);
       display();
   }
@@ -86,49 +142,15 @@ void resetSystem(){
   ESP.restart();
 }
 
-void getChuck(){
-  if (isConnected){
-    HTTPClient http;
-
-    http.begin("https://api.chucknorris.io/jokes/random");
-    int httpCode = http.GET();
-
-    if (httpCode > 0){
-      String payload = http.getString();
-      Serial.println(httpCode);
-
-      char json[1000];
-      payload.toCharArray(json, 1000);
-      StaticJsonDocument<1000> doc;
-      deserializeJson(doc, json);
-
-      const char* joke = doc["value"];
-
-      Serial.println(joke);
-    }
-    else {
-      Serial.println("Error on HTTP request");
-    }
-    http.end();
-    lcd.clear();
-    lcd.setCursor(0,0);
-    lcd.print("Chuck Norris");
-    lcd.setCursor(0, 1);
-    lcd.print("Approved ...");
-    delay(3000);
-    display();
-  }
-}
-
 void setup() {
   Serial.begin(921600);
   wifiManager.setMinimumSignalQuality(50);
-  WiFiManagerParameter custom_text("<p>This is just a text paragraph</p>");
+  WiFiManagerParameter custom_text("<p>Enter AWX Information</p>");
   wifiManager.addParameter(&custom_text);
   WiFiManagerParameter towerip("towerip", "Enter Tower IP", "", 50);
   WiFiManagerParameter toweroauth("toweroauth", "Enter Tower OAuth", "", 50);
-  WiFiManagerParameter towerworkflowBlue("towerworkflow1", "Enter Tower Workflow Blue", "", 50);
-  WiFiManagerParameter towerworkflowRed("towerworkflow2", "Enter Tower Workflow Red", "", 50);
+  WiFiManagerParameter towerworkflowBlue("towerworkflowBlue", "Enter Tower Workflow Blue", "", 50);
+  WiFiManagerParameter towerworkflowRed("towerworkflowRed", "Enter Tower Workflow Red", "", 50);
   wifiManager.addParameter(&towerip);
   wifiManager.addParameter(&toweroauth);
   wifiManager.addParameter(&towerworkflowBlue);
@@ -146,9 +168,10 @@ void setup() {
   lcd.print("System Ready...");
 
   Serial.println("System Ready...");
-
-  Serial.println("Tower IP: ");
-  Serial.println(towerip.getValue());
+  TowerIp = towerip.getValue();
+  TowerOauth = toweroauth.getValue();
+  TowerWorkFlowBlue = towerworkflowBlue.getValue();
+  TowerWorkFlowRed = towerworkflowRed.getValue();
 }
 
 void loop() {
@@ -175,7 +198,7 @@ void loop() {
     if (RedLastSteadyState == HIGH && Red_Button_State == LOW) {
       Serial.println("The Red button is pressed");
       printToLcd("Red");
-      callTower();
+      callTower("Red");
     }
     RedLastSteadyState = Red_Button_State;
   }
@@ -191,7 +214,9 @@ void loop() {
     if (BlueLastSteadyState == HIGH && Blue_Button_State == LOW) {
       Serial.println("The Blue button is pressed");
       printToLcd("Blue");
-      getChuck();
+      callTower("Blue");
+      // String joke = getChuck();
+      // Serial.println(joke);
     }
     BlueLastSteadyState = Blue_Button_State;
   }
