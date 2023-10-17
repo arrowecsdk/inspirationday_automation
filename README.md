@@ -8,7 +8,7 @@ Automation Setup for Arrow Inspiration Day 2023
 - [x] AWS Playbooks
 - [x] Azure Playbooks
 - [ ] ESP32 AWX Deploy
-- [ ] ESP32 Temp Sensor
+- [ ] ESP32 Temp IoT AWS
 - [x] Website
 
 ## Guide
