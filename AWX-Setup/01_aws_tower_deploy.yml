@@ -119,4 +119,4 @@
 
     - name: Debug
       ansible.builtin.debug:
-        msg: "{{ tower }}"
+        msg: "{{ tower.instances[0].network_interfaces[0].association.public_dns_name }}"
