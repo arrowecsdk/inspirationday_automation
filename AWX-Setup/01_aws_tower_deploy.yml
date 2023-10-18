@@ -115,7 +115,7 @@
         tags:
           Name: tower
           project: "{{ project_name }}"
-        register: tower
+      register: tower
 
     - name: Debug
       ansible.builtin.debug:
