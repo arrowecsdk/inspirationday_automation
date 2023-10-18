@@ -124,5 +124,5 @@
     - name: Export Tower Host
         ansible.builtin.lineinfile:
           path: ~/.bashrc
-          line: export "CONTROLLER_HOST=http://{{ tower_hostname }}"
+          line: "export CONTROLLER_HOST=http://{{ tower_hostname }}"
 #            - export CONTROLLER_USERNAME=admin
