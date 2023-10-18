@@ -117,6 +117,10 @@
           project: "{{ project_name }}"
       register: tower
 
-    - name: Debug
-      ansible.builtin.debug:
-        msg: "{{ tower.instances[0].network_interfaces[0].association.public_dns_name }}"
+    - name: Set Tower Hostname fact
+      ansible.builtin.set_fact:
+        tower_hostname: "{{ tower.instances[0].network_interfaces[0].association.public_dns_name }}"
+
+    - name: Export Tower Host
+      ansible.builtin.shell: |
+        export CONTROLLER_HOST=http://"{{ tower_hostname }}"
