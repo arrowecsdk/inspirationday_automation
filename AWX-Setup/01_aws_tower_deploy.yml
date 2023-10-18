@@ -123,4 +123,5 @@
 
     - name: Export Tower Host
       ansible.builtin.shell: |
-        export CONTROLLER_HOST=http://"{{ tower_hostname }}"
+        export "CONTROLLER_HOST=http://{{ tower_hostname }}"
+        export CONTROLLER_USERNAME=admin
