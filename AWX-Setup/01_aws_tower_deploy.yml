@@ -122,6 +122,8 @@
         tower_hostname: "{{ tower.instances[0].network_interfaces[0].association.public_dns_name }}"
 
     - name: Export Tower Host
-      ansible.builtin.shell: |
-        export "CONTROLLER_HOST=http://{{ tower_hostname }}"
-        export CONTROLLER_USERNAME=admin
+        ansible.builtin.lineinfile:
+          path: ~/.bashrc
+          line:
+            - export "CONTROLLER_HOST=http://{{ tower_hostname }}"
+            - export CONTROLLER_USERNAME=admin
