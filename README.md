@@ -11,13 +11,15 @@ Automation Setup for Arrow Inspiration Day 2023
 - [ ] ESP32 Temp IoT AWS
 - [x] Website
 
-## Guide
+## Setup Guide
 
-### Step 1 - Deploy AWX in AWS
+### Deploy AWX in AWS
 
 Requires a Linux machine with Python 3.9+
 
-#### Create Azure Service Prinsipal
+#### Create Azure Service Principal
+
+In the Azure Cloud Shell
 
 ```bash
 SubID=$(az account list --query "[].{id:id}" -o tsv)
@@ -26,7 +28,7 @@ az ad sp create-for-rbac --name awx-demo --role Contributor --scopes /subscripti
 
 echo $SubID
 
-Save the credentials in ~/.azure/credentials
+Save the credentials in ~/.azure/credentials on your linux machine
 
 In this format
 
@@ -39,6 +41,8 @@ tenant=xxxx-xxxx-xxxx-xxxx-xxxx
 
 #### Create AWS IAM User
 
+In the AWS Cloud Shell
+
 ```bash
 aws iam create-user --user-name awx-demo
 
@@ -46,7 +50,7 @@ aws iam add-user-to-group --user-name awx-demo --group-name AWSAdmins
 
 aws iam create-access-key --user-name awx-demo
 
-Save the credentials in ~/.aws/credentials
+Save the credentials in ~/.aws/credentials on you linux machine
 
 In this format
 
@@ -56,7 +60,10 @@ aws_secret_access_key=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 ```
 
+#### Install and run playbooks on your linux machine
+
 ```bash
+
 ssh-keygen
 
 python3 -m venv ansible_insp
