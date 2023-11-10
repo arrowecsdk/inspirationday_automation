@@ -1,4 +1,0 @@
-{
-    "ansible.python.interpreterPath": "/bin/python3",
-    "cmake.configureOnOpen": false
-}
