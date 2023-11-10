@@ -1,6 +1,10 @@
 # Inspirationday Automation
 
+## Arrow Tech Hub
+
 Automation Setup for Arrow Inspiration Day 2023
+
+14 - 15 November
 
 ## ToDo List
 
@@ -28,7 +32,8 @@ Automation Setup for Arrow Inspiration Day 2023
 | TempDeploy | |
 | Website | The Famous Chuck Norris website |
 
-## Setup Guide
+## Setup Guides
 
 [AWX Setup](/AWX-Setup/README.md)
+
 [Website](/Website/README.md)
