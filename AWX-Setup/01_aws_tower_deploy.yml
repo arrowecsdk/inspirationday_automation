@@ -117,16 +117,17 @@
           project: "{{ project_name }}"
       register: tower
 
+    - name: Wait 20 sec for server to launch
+      ansible.builtin.wait_for:
+        timeout: 20
+
     - name: Set Tower Hostname fact
       ansible.builtin.set_fact:
         tower_hostname: "{{ tower.instances[0].network_interfaces[0].association.public_dns_name }}"
 
     - name: Export Tower Host
       ansible.builtin.lineinfile:
-        path: ~/.bashrc
-        line: "export CONTROLLER_HOST=http://{{ tower_hostname }}"
-
-    - name: Export Tower Host User
-      ansible.builtin.lineinfile:
-        path: ~/.bashrc
-        line: export CONTROLLER_USERNAME=admin
+        path: ~/awxhostfile
+        line: "{{ tower_hostname }}"
+        create: true
+        mode: '0644'
