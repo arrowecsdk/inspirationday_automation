@@ -17,14 +17,17 @@ Automation Setup for Arrow Inspiration Day 2023
 
 ## Folder Structure
 
-- AWS-Playbook
-- AWX-Setup
-- Azure-Playbook
-- ESP32Deploy
-- ESP32TempIoT
-- TempDeploy
-- Website
+| Folder | Description |
+| ------- | -------- |
+| AWS-Playbook | |
+| AWX-Setup | |
+| Azure-Playbook | |
+| ESP32Deploy | |
+| ESP32TempIoT | |
+| TempDeploy | |
+| Website | |
 
 ## Setup Guide
 
 [AWX Setup](/AWX-Setup/README.md)
+[Website](/Website/README.md)
