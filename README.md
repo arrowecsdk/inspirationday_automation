@@ -9,6 +9,7 @@ Automation Setup for Arrow Inspiration Day 2023
 - [x] Azure Playbooks
 - [ ] ESP32 AWX Deploy
   - [ ] Persistant memory
+  - [ ] Send Chuck Norris Quote to AWX
 - [x] ESP32 Temp IoT AWS
 - [ ] TempDeploy
   - [ ] AWS IoT Guide
@@ -19,13 +20,13 @@ Automation Setup for Arrow Inspiration Day 2023
 
 | Folder | Description |
 | ------- | -------- |
-| AWS-Playbook | |
-| AWX-Setup | |
-| Azure-Playbook | |
-| ESP32Deploy | |
-| ESP32TempIoT | |
+| AWS-Playbook | Ansible playbooks for deploying website in AWS |
+| AWX-Setup | Ansible playbooks for deploying and configuring AWX in AWS |
+| Azure-Playbook | Ansible playbooks for deploying website in Azure |
+| ESP32Deploy | Code for ESP32 Deployment Solution |
+| ESP32TempIoT | Code for ESP32 Temperature and Humidity IoT device |
 | TempDeploy | |
-| Website | |
+| Website | The Famous Chuck Norris website |
 
 ## Setup Guide
 
