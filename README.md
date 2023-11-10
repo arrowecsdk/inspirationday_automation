@@ -2,14 +2,12 @@
 
 ## Arrow Tech Hub
 
-Automation Setup for Arrow Inspiration Day 2023
-
-14 - 15 November
+Automation Setup for Arrow Inspiration Day 2023 - 14 - 15 November
 
 ## ToDo List
 
-- [x] AWX Install folder
 - [x] AWS Playbooks
+- [x] AWX Install folder
 - [x] Azure Playbooks
 - [ ] ESP32 AWX Deploy
   - [ ] Persistant memory
