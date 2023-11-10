@@ -10,6 +10,8 @@
 #define RED_BUTTON_PIN 4
 #define BLUE_BUTTON_PIN 5
 #define RESET_BUTTON_PIN 18
+#define RED_RELAY_PIN 13
+#define BLUE_RELAY_PIN 12
 #define DEBOUNCE_TIME 50
 
 // Variables will change:
@@ -26,8 +28,12 @@ int Reset_Button_State = 0;
 unsigned long RedLastDebounceTime = 0;
 unsigned long BlueLastDebounceTime = 0;
 unsigned long ResetLastDebounceTime = 0;
+unsigned long RedLastMillis;
+unsigned long BlueLastMillis;
 
 bool isConnected = false;
+bool RedRelayOn = false;
+bool BlueRelayOn = false;
 
 String TowerIp = "";
 String TowerOauth = "";
@@ -44,6 +50,19 @@ void display(){
     lcd.print("System Ready...");
     lcd.setCursor(0, 1);
     lcd.print(wifiManager.getWiFiSSID());
+}
+
+void startRedRelay(){
+  RedRelayOn = true;
+  digitalWrite(RED_RELAY_PIN, LOW);
+  RedLastMillis = millis();
+  Serial.println("Start Red Relay");
+}
+
+void startBlueRelay(){
+  BlueRelayOn = true;
+  digitalWrite(BLUE_RELAY_PIN, LOW);
+  BlueLastMillis = millis();
 }
 
 String getChuck(){
@@ -78,6 +97,7 @@ String getChuck(){
     delay(3000);
     display();
   }
+  return "";
 }
 
 void callTower(String color){
@@ -144,6 +164,8 @@ void resetSystem(){
 
 void setup() {
   Serial.begin(921600);
+  digitalWrite(RED_RELAY_PIN, HIGH);
+  digitalWrite(BLUE_RELAY_PIN, HIGH);
   wifiManager.setMinimumSignalQuality(50);
   WiFiManagerParameter custom_text("<p>Enter AWX Information</p>");
   wifiManager.addParameter(&custom_text);
@@ -160,6 +182,8 @@ void setup() {
   pinMode(RED_BUTTON_PIN, INPUT);
   pinMode(BLUE_BUTTON_PIN, INPUT);
   pinMode(RESET_BUTTON_PIN, INPUT);
+  pinMode(RED_RELAY_PIN, OUTPUT);
+  pinMode(BLUE_RELAY_PIN, OUTPUT);
   lcd.init();
   lcd.clear();
   lcd.backlight();
@@ -199,6 +223,7 @@ void loop() {
       Serial.println("The Red button is pressed");
       printToLcd("Red");
       callTower("Red");
+      startRedRelay();
     }
     RedLastSteadyState = Red_Button_State;
   }
@@ -215,8 +240,7 @@ void loop() {
       Serial.println("The Blue button is pressed");
       printToLcd("Blue");
       callTower("Blue");
-      // String joke = getChuck();
-      // Serial.println(joke);
+      startBlueRelay();
     }
     BlueLastSteadyState = Blue_Button_State;
   }
@@ -237,4 +261,17 @@ void loop() {
   }
   // Reset Button - Stop
 
+  //Stop RED_RELAY
+  if (RedRelayOn == true && millis() - RedLastMillis >= 5*1000UL) {
+    digitalWrite(RED_RELAY_PIN, HIGH);
+    RedLastMillis = millis();
+    RedRelayOn = false;
+    Serial.println("Stop Red Relay");
+  }
+  //Stop BLUE_RELAY
+  if (BlueRelayOn == true && millis() - BlueLastMillis >= 5*1000UL) {
+    digitalWrite(BLUE_RELAY_PIN, HIGH);
+    BlueLastMillis = millis();
+    BlueRelayOn = false;
+  }
 }
