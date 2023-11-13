@@ -11,7 +11,7 @@ Automation Setup for Arrow Inspiration Day 2023 - 14 - 15 November
 - [x] Azure Playbooks
 - [ ] ESP32 AWX Deploy
   - [ ] Persistant memory
-  - [ ] Send Chuck Norris Quote to AWX
+  - [x] Send Chuck Norris Quote to AWX
 - [x] ESP32 Temp IoT AWS
 - [ ] TempDeploy
   - [ ] AWS IoT Guide

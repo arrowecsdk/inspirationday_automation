@@ -111,13 +111,19 @@ void callTower(String color){
     String joke = getChuck();
     String token = "Bearer " + TowerOauth;
     String url = "http://" + TowerIp + "/api/v2/workflow_job_templates/" + ID + "/launch/";
+    String json;
+
+    StaticJsonDocument<300> doc;
+    JsonObject obj = doc.createNestedObject("extra_vars");
+    obj["facts"] = joke;
+    serializeJson(doc, json);
 
     HTTPClient http;
 
     http.begin(url);
     http.addHeader("Content-Type", "application/json");
     http.addHeader("Authorization", token);
-    int httpResponseCode = http.POST("");
+    int httpResponseCode = http.POST(json);
 
     if (httpResponseCode > 0)
     {
@@ -134,6 +140,7 @@ void callTower(String color){
       Serial.println(url);
       Serial.println(joke);
       Serial.println(ID);
+      Serial.println(json);
       delay(3000);
       display();
   }
@@ -166,7 +173,7 @@ void setup() {
   Serial.begin(921600);
   digitalWrite(RED_RELAY_PIN, HIGH);
   digitalWrite(BLUE_RELAY_PIN, HIGH);
-  wifiManager.setMinimumSignalQuality(50);
+  wifiManager.setMinimumSignalQuality(80);
   WiFiManagerParameter custom_text("<p>Enter AWX Information</p>");
   wifiManager.addParameter(&custom_text);
   WiFiManagerParameter towerip("towerip", "Enter Tower IP", "", 50);
