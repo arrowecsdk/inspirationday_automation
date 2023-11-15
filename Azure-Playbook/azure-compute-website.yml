@@ -1,10 +1,10 @@
 ---
 - name: Azure Webserver Compute Website
   hosts: tag_Ansible_webserver
-  become: yes
+  become: true
 
   tasks:
     - name: Download Website from Github
-      git:
+      ansible.builtin.git:
         repo: "{{ gitrepo }}"
         dest: "/var/www/html"
