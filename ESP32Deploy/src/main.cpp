@@ -269,14 +269,14 @@ void loop() {
   // Reset Button - Stop
 
   //Stop RED_RELAY
-  if (RedRelayOn == true && millis() - RedLastMillis >= 5*1000UL) {
+  if (RedRelayOn == true && millis() - RedLastMillis >= 25*1000UL) {
     digitalWrite(RED_RELAY_PIN, HIGH);
     RedLastMillis = millis();
     RedRelayOn = false;
     Serial.println("Stop Red Relay");
   }
   //Stop BLUE_RELAY
-  if (BlueRelayOn == true && millis() - BlueLastMillis >= 5*1000UL) {
+  if (BlueRelayOn == true && millis() - BlueLastMillis >= 25*1000UL) {
     digitalWrite(BLUE_RELAY_PIN, HIGH);
     BlueLastMillis = millis();
     BlueRelayOn = false;

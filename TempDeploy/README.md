@@ -51,3 +51,18 @@ Error Action: Republish to IoT Topic
 ### Instance
 
 ### IAM Role
+
+### Dashboard
+
+```sql
+select time, (measure_value::double) as Temperatur from $__database.$__table where measure_name like 'temp'
+
+select time, (measure_value::double) as Humidity from $__database.$__table where measure_name like 'humi'
+
+select measure_value::double from $__database.$__table where measure_name like 'temp' order by time desc limit 1
+
+select measure_value::double from $__database.$__table where measure_name like 'humi' order by time desc limit 1
+
+```
+
+
